@@ -80,9 +80,9 @@ public class App {
         }
 
         WiseSaying foundWiseSaying = null;
-        for (WiseSaying wiseSaying___ : wiseSayings) {
-            if (wiseSaying___.id == paramId) {
-                foundWiseSaying = wiseSaying___;
+        for (WiseSaying wiseSaying : wiseSayings) {
+            if (wiseSaying.id == paramId) {
+                foundWiseSaying = wiseSaying;
             }
         }
         if (foundWiseSaying == null) {
