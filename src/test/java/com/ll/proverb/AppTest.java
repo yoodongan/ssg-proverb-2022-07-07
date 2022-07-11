@@ -51,10 +51,18 @@ public class AppTest {
     }
 
     @Test
-    public void Rq() {
-        Rq rq = new Rq("삭제?id=10");
+    public void Rq__getIntParam() {
+        Rq rq = new Rq("삭제?id=2");
         int id = rq.getIntParam("id", 0);
-        assertEquals(10, id);
+        assertEquals(2, id);
+    }
+    @Test
+    public void Rq__getIntParam__2() {
+        Rq rq = new Rq("삭제?id=2&no=3");
+        int id = rq.getIntParam("id", 2);
+        int no = rq.getIntParam("no", 3);
+        assertEquals(2, id);
+        assertEquals(3, no);
     }
 
 
