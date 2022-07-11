@@ -79,12 +79,8 @@ public class App {
             return;    // continue 가 아니라, 이제는 함수를 빠져나오면 된다.
         }
 
-        WiseSaying foundWiseSaying = null;
-        for (WiseSaying wiseSaying : wiseSayings) {
-            if (wiseSaying.id == paramId) {
-                foundWiseSaying = wiseSaying;
-            }
-        }
+        WiseSaying foundWiseSaying = findById(paramId);
+
         if (foundWiseSaying == null) {
             System.out.printf("%d번 명언은 존재하지 않습니다.\n", paramId);
             return;
@@ -93,6 +89,15 @@ public class App {
         System.out.printf("%d번 명언이 삭제되었습니다!\n", paramId);
 
     }
+    private WiseSaying findById(int paramId) {
+        for (WiseSaying wiseSaying : wiseSayings) {
+            if (wiseSaying.id == paramId) {
+                return wiseSaying;
+            }
+        }
+        return null;
+    }
+
 
 
 }
