@@ -49,4 +49,13 @@ public class AppTest {
 
         assertEquals("안녕", rs);
     }
+
+    @Test
+    public void Rq() {
+        Rq rq = new Rq("삭제?id=10");
+        int id = rq.getIntParam("id", 0);
+        assertEquals(10, id);
+    }
+
+
 }
