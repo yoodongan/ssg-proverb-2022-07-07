@@ -65,5 +65,12 @@ public class AppTest {
         assertEquals(3, no);
     }
 
+    @Test
+    public void Rq__getPath() {
+        Rq rq = new Rq("삭제?id=1");
+        String path = rq.getPath();   // getPath(); 는 url 에서 "삭제"와 같이 명령어만 가져온다.
+        assertEquals("삭제", path);
+    }
+
 
 }
