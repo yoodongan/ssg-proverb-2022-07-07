@@ -12,21 +12,18 @@ import java.util.Scanner;
 
 
 public class App {
-    public static void writeStringToFile(String str, File file) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        bw.write(str);
-        bw.close();
+    private Scanner sc;      // run() 안에 있던 변수들을 App 클래스 변수로 빼낸다. -> 함수들에서 공통으로 사용하는 변수들이므로.
+    private List<WiseSaying> wiseSayings;    // WiseSayings 객체를 리스트 형태로 저장.
+    private int wiseSayingLastId;    // 가장 마지막 명언글의 번호를 말한다.
+
+    public App() {
+        sc = new Scanner(System.in);
+        wiseSayings = new ArrayList<>();
+        wiseSayingLastId = 0;
     }
 
     public void run() {
         System.out.println("=== 명언 SSG ===");
-
-        Scanner sc = new Scanner(System.in);
-
-        // 가장 마지막 명언글의 번호
-        List<WiseSaying> wiseSayings = new ArrayList<>();    // WiseSayings 객체를 리스트 형태로 저장.
-        int wiseSayingLastId = 0;
-
 
         outer:
         while (true) {
@@ -37,45 +34,13 @@ public class App {
 
             switch (rq.getPath()) {
                 case "등록":
-                    System.out.printf("명언 : ");
-                    String content = sc.nextLine().trim();
-                    System.out.printf("작가 : ");
-                    String author = sc.nextLine().trim();
-                    int id = ++wiseSayingLastId; // 명언 글 번호 증가
-
-                    WiseSaying wiseSaying = new WiseSaying(id, content, author);
-                    wiseSayings.add(wiseSaying);
-
-                    System.out.printf("%d번 명언이 등록되었습니다.\n", id);
+                    write(rq);   // rq 인자는 공유하는 대상이 아니다. 따라서, 인자로 넣어줘야 한다.
                     break;
                 case "삭제":
-                    int paramId = rq.getIntParam("id", 0);
-
-                    if (paramId == 0) {
-                        System.out.println("id 를 입력해주세요.");
-                        continue;
-                    }
-
-                    WiseSaying wiseSaying__ = null;
-                    for (WiseSaying wiseSaying___ : wiseSayings) {
-                        if (wiseSaying___.id == paramId) {
-                            wiseSaying__ = wiseSaying___;
-                        }
-                    }
-                    if (wiseSaying__ == null) {
-                        System.out.printf("%d번 명언은 존재하지 않습니다.\n", paramId);
-                        continue;
-                    }
-                    wiseSayings.remove(wiseSaying__);
-                    System.out.printf("%d번 명언이 삭제되었습니다!\n", paramId);
+                    remove(rq);
                     break;
                 case "목록":
-                    System.out.println("번호 / 작가 / 명언");
-                    System.out.println("-------------------");
-                    for (int i = wiseSayings.size() - 1; i >= 0; i--) {    // 큰수부터 내림차순으로 출력한다.
-                        WiseSaying wiseSaying_ = wiseSayings.get(i);  // List에서 WiseSaying 객체 빼내오기.
-                        System.out.printf("%d / %s / %s\n", wiseSaying_.id, wiseSaying_.content, wiseSaying_.author);
-                    }
+                    list(rq);
                     break;
                 case "종료":
                     break outer;
@@ -85,4 +50,49 @@ public class App {
         sc.close();
 
     }
+    private void list(Rq rq) {
+        System.out.println("번호 / 작가 / 명언");
+        System.out.println("-------------------");
+        for (int i = wiseSayings.size() - 1; i >= 0; i--) {    // 큰수부터 내림차순으로 출력한다.
+            WiseSaying wiseSaying_ = wiseSayings.get(i);  // List에서 WiseSaying 객체 빼내오기.
+            System.out.printf("%d / %s / %s\n", wiseSaying_.id, wiseSaying_.content, wiseSaying_.author);
+        }
+    }
+    private void write(Rq rq) {
+        System.out.printf("명언 : ");
+        String content = sc.nextLine().trim();
+        System.out.printf("작가 : ");
+        String author = sc.nextLine().trim();
+        int id = ++wiseSayingLastId; // 명언 글 번호 증가
+
+        WiseSaying wiseSaying = new WiseSaying(id, content, author);
+        wiseSayings.add(wiseSaying);
+
+        System.out.printf("%d번 명언이 등록되었습니다.\n", id);
+
+    }
+    private void remove(Rq rq) {
+        int paramId = rq.getIntParam("id", 0);
+
+        if (paramId == 0) {
+            System.out.println("id 를 입력해주세요.");
+            return;    // continue 가 아니라, 이제는 함수를 빠져나오면 된다.
+        }
+
+        WiseSaying foundWiseSaying = null;
+        for (WiseSaying wiseSaying___ : wiseSayings) {
+            if (wiseSaying___.id == paramId) {
+                foundWiseSaying = wiseSaying___;
+            }
+        }
+        if (foundWiseSaying == null) {
+            System.out.printf("%d번 명언은 존재하지 않습니다.\n", paramId);
+            return;
+        }
+        wiseSayings.remove(foundWiseSaying);
+        System.out.printf("%d번 명언이 삭제되었습니다!\n", paramId);
+
+    }
+
+
 }
