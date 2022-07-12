@@ -29,8 +29,6 @@ public class Rq {
             }
         }
 
-
-
     }
     public int getIntParam(String paramName, int defaultValue) {
         if (queryParams.containsKey(paramName) == false) {   // HashMap 의 paramName 키 값이 없다면, false ...

@@ -72,5 +72,12 @@ public class AppTest {
         assertEquals("삭제", path);
     }
 
+    @Test
+    public void 수정() {
+        Rq rq = new Rq("수정?id=1&no=3");
+        int id = rq.getIntParam("id", 1);
+        int no = rq.getIntParam("no", 3);
+
+    }
 
 }

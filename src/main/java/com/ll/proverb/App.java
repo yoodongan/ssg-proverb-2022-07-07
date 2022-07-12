@@ -42,6 +42,9 @@ public class App {
                 case "목록":
                     list(rq);
                     break;
+                case "수정":
+                    modify(rq);
+                    break;
                 case "종료":
                     break outer;
             }
@@ -89,6 +92,33 @@ public class App {
         System.out.printf("%d번 명언이 삭제되었습니다!\n", paramId);
 
     }
+    public void modify(Rq rq) {
+        int paramId = rq.getIntParam("id", 0);
+
+        if (paramId == 0) {
+            System.out.println("id 를 입력해주세요.");
+            return;    // continue 가 아니라, 이제는 함수를 빠져나오면 된다.
+        }
+
+        WiseSaying foundWiseSaying = findById(paramId);
+
+        if (foundWiseSaying == null) {
+            System.out.printf("%d번 명언은 존재하지 않습니다.\n", paramId);
+            return;
+        }
+
+        System.out.printf("명언(기존) : %s\n", foundWiseSaying.content);
+        System.out.printf("명언 : ");
+        foundWiseSaying.content = sc.nextLine();
+        System.out.printf("작가(기존) : %s\n", foundWiseSaying.author);
+        System.out.printf("작가 : ");
+        foundWiseSaying.author = sc.nextLine();
+
+        System.out.printf("%d번 명언이 수정되었습니다!\n", paramId);
+
+    }
+
+
     private WiseSaying findById(int paramId) {
         for (WiseSaying wiseSaying : wiseSayings) {
             if (wiseSaying.id == paramId) {
