@@ -1,36 +1,49 @@
 package com.ll.proverb;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Rq {
     public String url;
     public String path;
-    public String queryStr;
+    Map<String, String> queryParams;    // 해시맵 도입. 명령어에서 삭제?id=1   삭제 / id=1 이렇게 나눠서 저장.
 
     public Rq(String url) {
         this.url = url;
         String[] urlBits = url.split("\\?", 2);
         this.path = urlBits[0];   // '삭제'와 같이 명령 부분만 저장.
-        if (urlBits.length == 2) {
-            this.queryStr = urlBits[1];   // url의 ? 뒤 나머지 부분을 queryStr 이라고 한다. 삭제?id=1&no=3
+        queryParams = new HashMap<>();      // 위에 선언하지 않아서 NPE 오류 뜸...
+        if (urlBits.length == 2) {   // 삭제? 뒤에 값이 있어야 한다 !!
+
+            String queryStr = urlBits[1];
+            String[] paramBits = queryStr.split("&");
+
+            for (String paramBit : paramBits) {
+                String[] paramNameAndValue = paramBit.split("=", 2);
+                if (paramNameAndValue.length == 1) {
+                    continue;
+                }
+                String paramName = paramNameAndValue[0].trim();
+                String paramValue = paramNameAndValue[1].trim();
+                queryParams.put(paramName, paramValue);
+            }
         }
+
+
 
     }
     public int getIntParam(String paramName, int defaultValue) {
-        if (queryStr == null) {
+        if (queryParams.containsKey(paramName) == false) {   // HashMap 의 paramName 키 값이 없다면, false ...
             return defaultValue;
         }
 
-        String[] bits = queryStr.split("&");
+        String paramValue = queryParams.get(paramName);
 
-        for(String urlBit : bits) {
-            String[] paramNameAndValue = urlBit.split("=", 2);
-            String paramName_ = paramNameAndValue[0];
-            String paramValue = paramNameAndValue[1];
-
-            if (paramName.equals(paramName_)) {
-                return Integer.parseInt(paramValue);
-            }
+        if (paramValue.length() == 0) {   // 예외처리. 만약 paramValue 값에 아무것도 없다면, defaultValue 출력.
+            return defaultValue;
         }
-        return defaultValue;
+
+        return Integer.parseInt(paramValue);
     }
 
     public String getPath() {
